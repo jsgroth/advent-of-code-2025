@@ -2,7 +2,6 @@
 //!
 //! <https://adventofcode.com/2025/day/3>
 
-use rustc_hash::FxHashMap;
 use std::error::Error;
 
 const PART_1_BATTERIES: usize = 2;
@@ -13,7 +12,7 @@ fn solve(input: &str, batteries_len: usize) -> u64 {
         .lines()
         .map(|line| {
             let batteries: Vec<_> = line.as_bytes().iter().map(|&c| u64::from(c - b'0')).collect();
-            find_max_joltage(&batteries, 0, batteries_len, &mut FxHashMap::default())
+            find_max_joltage(&batteries, batteries_len)
         })
         .sum()
 }
@@ -26,32 +25,26 @@ fn solve_part_2(input: &str) -> u64 {
     solve(input, PART_2_BATTERIES)
 }
 
-fn find_max_joltage(
-    batteries: &[u64],
-    i: usize,
-    len: usize,
-    cache: &mut FxHashMap<(usize, usize), u64>,
-) -> u64 {
-    assert!(i + len <= batteries.len());
+fn find_max_joltage(batteries: &[u64], len: usize) -> u64 {
+    assert!(len <= batteries.len());
 
     if len == 0 {
         return 0;
     }
 
-    if let Some(&value) = cache.get(&(i, len)) {
-        return value;
+    let end = batteries.len() - len + 1;
+
+    let mut max_digit = 0;
+    let mut max_digit_idx = 0;
+    for (i, &digit) in batteries.iter().enumerate().take(end) {
+        if digit > max_digit {
+            max_digit = digit;
+            max_digit_idx = i;
+        }
     }
 
-    let mut max_joltage = 0;
-    let end = batteries.len() - len;
-    for j in i..=end {
-        let sub_max = find_max_joltage(batteries, j + 1, len - 1, cache);
-        let joltage = sub_max + batteries[j] * 10_u64.pow((len - 1) as u32);
-        max_joltage = max_joltage.max(joltage);
-    }
-
-    cache.insert((i, len), max_joltage);
-    max_joltage
+    let sub_max = find_max_joltage(&batteries[max_digit_idx + 1..], len - 1);
+    sub_max + batteries[max_digit_idx] * 10_u64.pow((len - 1) as u32)
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
