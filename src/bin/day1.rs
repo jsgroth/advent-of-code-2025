@@ -64,15 +64,29 @@ fn main() -> Result<(), Box<dyn Error>> {
 mod tests {
     use super::*;
 
-    const SAMPLE_INPUT: &str = include_str!("../../sample/day1.txt");
+    fn sample_input() -> &'static str {
+        "
+L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82
+"
+        .trim()
+    }
 
     #[test]
     fn part_1() {
-        assert_eq!(3, solve_part_1(SAMPLE_INPUT));
+        assert_eq!(3, solve_part_1(sample_input()));
     }
 
     #[test]
     fn part_2() {
-        assert_eq!(6, solve_part_2(SAMPLE_INPUT));
+        assert_eq!(6, solve_part_2(sample_input()));
     }
 }

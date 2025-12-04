@@ -46,15 +46,22 @@ fn main() -> Result<(), Box<dyn Error>> {
 mod tests {
     use super::*;
 
-    const SAMPLE_INPUT: &str = include_str!("../../sample/day2.txt");
+    fn sample_input() -> &'static str {
+        "
+11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
+1698522-1698528,446443-446449,38593856-38593862,565653-565659,
+824824821-824824827,2121212118-2121212124
+"
+        .trim()
+    }
 
     #[test]
     fn part_1() {
-        assert_eq!(1227775554, solve::<false>(SAMPLE_INPUT));
+        assert_eq!(1227775554, solve::<false>(sample_input()));
     }
 
     #[test]
     fn part_2() {
-        assert_eq!(4174379265, solve::<true>(SAMPLE_INPUT));
+        assert_eq!(4174379265, solve::<true>(sample_input()));
     }
 }
