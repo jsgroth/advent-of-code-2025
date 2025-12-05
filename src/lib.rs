@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::fmt::Display;
 use std::time::Instant;
-use std::{env, fs, io};
+use std::{env, fs, hint, io};
 
 pub fn read_input() -> io::Result<String> {
     let mut args = env::args();
@@ -16,7 +16,7 @@ fn time<T>(input: &str, f: impl Fn(&str) -> T) {
     let mut total_nanos = 0;
     for _ in 0..RUNS {
         let start_time = Instant::now();
-        f(input);
+        hint::black_box(f(hint::black_box(input)));
         total_nanos += (Instant::now() - start_time).as_nanos();
     }
 
