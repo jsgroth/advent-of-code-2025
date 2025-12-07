@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fmt::Display;
+use std::ops::{Add, AddAssign, Index, IndexMut, Sub, SubAssign};
 use std::time::Instant;
 use std::{env, fs, hint, io};
 
@@ -49,3 +50,73 @@ where
 
     Ok(())
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Point2D<T> {
+    pub x: T,
+    pub y: T,
+}
+
+impl<T: Add<Output = T>> Add for Point2D<T> {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self { x: self.x + rhs.x, y: self.y + rhs.y }
+    }
+}
+
+impl<T: AddAssign> AddAssign for Point2D<T> {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
+impl<T: Sub<Output = T>> Sub for Point2D<T> {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self { x: self.x - rhs.x, y: self.y - rhs.y }
+    }
+}
+
+impl<T: SubAssign> SubAssign for Point2D<T> {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Grid2D<T>(pub Vec<Vec<T>>);
+
+impl<T> Grid2D<T> {
+    pub fn rows(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn cols(&self) -> usize {
+        self.0[0].len()
+    }
+}
+
+macro_rules! impl_grid_index {
+    ($t:ty) => {
+        impl<T> Index<Point2D<$t>> for Grid2D<T> {
+            type Output = T;
+
+            fn index(&self, index: Point2D<$t>) -> &Self::Output {
+                &self.0[index.y as usize][index.x as usize]
+            }
+        }
+
+        impl<T> IndexMut<Point2D<$t>> for Grid2D<T> {
+            fn index_mut(&mut self, index: Point2D<$t>) -> &mut Self::Output {
+                &mut self.0[index.y as usize][index.x as usize]
+            }
+        }
+    };
+}
+
+impl_grid_index!(usize);
+impl_grid_index!(i32);
