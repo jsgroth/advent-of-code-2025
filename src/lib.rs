@@ -87,6 +87,45 @@ impl<T: SubAssign> SubAssign for Point2D<T> {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Point3D<T> {
+    pub x: T,
+    pub y: T,
+    pub z: T,
+}
+
+impl<T: Add<Output = T>> Add for Point3D<T> {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
+    }
+}
+
+impl<T: AddAssign> AddAssign for Point3D<T> {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
+    }
+}
+
+impl<T: Sub<Output = T>> Sub for Point3D<T> {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self { x: self.x - rhs.x, y: self.y - rhs.y, z: self.z - rhs.z }
+    }
+}
+
+impl<T: SubAssign> SubAssign for Point3D<T> {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+        self.z -= rhs.z;
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Grid2D<T>(pub Vec<Vec<T>>);
 
